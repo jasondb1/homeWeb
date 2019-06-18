@@ -13,26 +13,28 @@ class Controls extends Component {
 
         this.handleClick = this.handleClick.bind(this);
 
-    }
+    };
 
     handleClick(){
 console.log('[handle click]');
+console.log(this.state.led_on);
+
         if (this.state.led_on){
             api.ledOff().then(json => this.setState({led_on: false }));
         } else {
             api.ledOn().then(json => this.setState({led_on: true}));
         }
-    }
+    };
 
     render(){
 
         return(
           <div>
               Controls<br />
-              <button onClick={this.handleClick()}>Toggle LED</button>
+              <button onClick={this.handleClick}>Toggle LED</button>
           </div>
         );
-    }
+    };
 
 
 
