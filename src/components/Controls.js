@@ -9,7 +9,9 @@ class Controls extends Component {
 
         this.state = {
             led_on: false,
-        }
+        };
+
+        this.handleClick = this.handleClick.bind(this);
 
     }
 
