@@ -13,8 +13,9 @@ const homewebService = {
   },
 
   ledOn() {
+      console.log('led on');
     return new Promise((resolve, reject) => {
-      fetch(`${baseAPI}/ledOn`)
+      fetch(`${baseAPI}/led_on`)
           .then(response => response.json())
           .then(json => resolve(json))
           .catch(err => {
@@ -24,8 +25,9 @@ const homewebService = {
   },
 
   ledOff() {
+      console.log('led on');
     return new Promise((resolve, reject) => {
-      fetch(`${baseAPI}/ledOff`)
+      fetch(`${baseAPI}/led_off`)
           .then(response => response.json())
           .then(json => resolve(json))
           .catch(err => {
