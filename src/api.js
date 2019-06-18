@@ -13,7 +13,7 @@ const homewebService = {
   },
 
   ledOn() {
-      console.log('led on');
+      console.log('api led on');
     return new Promise((resolve, reject) => {
       fetch(`${baseAPI}/led_on`)
           .then(response => response.json())
@@ -25,7 +25,7 @@ const homewebService = {
   },
 
   ledOff() {
-      console.log('led on');
+      console.log('api led off');
     return new Promise((resolve, reject) => {
       fetch(`${baseAPI}/led_off`)
           .then(response => response.json())

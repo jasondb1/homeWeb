@@ -14,7 +14,7 @@ class Controls extends Component {
     }
 
     handleClick(){
-
+console.log('[handle click]');
         if (this.state.led_on){
             api.ledOff().then(json => this.setState({led_on: false }));
         } else {
