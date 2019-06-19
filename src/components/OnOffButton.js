@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import '../api';
 import api from "../api";
 
 
@@ -18,26 +17,28 @@ class OnOff extends Component {
     }
 
     handleClick() {
-        if (this.state.led_on) {
-            api.ledOff().then(json => this.setState({led_on: false}));
+        if (this.state.isOn) {
+            api.ledOff().then(json => this.setState({isOn: false}));
         } else {
-            api.ledOn().then(json => this.setState({led_on: true}));
+            api.ledOn().then(json => this.setState({isOn: true}));
         }
     };
 
-    btnState() {
-        return (
-            'btn ' +
-            this.state.led_on ? 'btn-success' : 'btn-danger'
-        )
+    btnClasses() {
+	let classes = "btn";
+	    classes += this.state.isOn === true ? ' btn-success' : ' btn-danger';
+        return classes;
     }
 
     render() {
         return (
             <div className='control'>
+		<label>
+		{this.state.label}
+		</label>
                 <button
                     onClick={this.handleClick}
-                    className={this.btnState()}
+                    className={this.btnClasses()}
                 >
                     {this.state.isOn ? 'ON' : 'OFF'}
                 </button>
