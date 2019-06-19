@@ -6,6 +6,13 @@ import Controls from "./components/Controls";
 import Status from "./components/Status";
 
 class App extends Component {
+
+    constructor(){
+        super();
+        this.state = {};
+    }
+
+
   render() {
     return (
       <div>
