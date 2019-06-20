@@ -10,7 +10,6 @@ class OnOff extends Component {
         this.state = {
             label: props.label,
             isOn: props.isOn,
-
         };
 
         this.handleClick = this.handleClick.bind(this);

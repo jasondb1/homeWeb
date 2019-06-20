@@ -1,43 +1,19 @@
-# React CosmosDB
+# React homeWeb
 
-This is a demo project for the React CosmosDB video series that shows how to...
-
-* Setup a React / Node application
-* Create, Read, Update and Delete data from CosmosDB with the Mongo API
-* Debug React and Node apps
-* Scale and replicate CosmosDB
-
-Follow along with the video series. React is a blast and CosmosDB is crazy fast. Building this app is way too much fun.
+A project for raspberry pi web control with a node.js backend and react frontend
 
 ## Get Started
 
 1. Clone this repository
 
 ```bash
-git clone https://github.com/burkeholland/react-cosmosdb.git
+git clone https://github.com/jasondb1/homeWeb.git
 ```
 
 2. Change into the directory that was cloned and run `npm install`
 
 ```bash
-cd react-cosmosdb && npm install
-```
-
-3. Configure the CosmosDB Server Setting
-
-Rename `server/env/environment.js` to `environment.js` and change the `cosmosPort`, `dbName` and `key` to match your CosmosDB environment.
-
-```javascript
-// server/env/environment.js
-const cosmosPort = 1234; // replace with your port
-const dbName = 'your-cosmos-db-name-goes-here';
-const key = 'your-key-goes-here';
-
-module.exports = {
-  cosmosPort,
-  dbName,
-  key
-};
+cd homeWeb && npm install
 ```
 
 ## Running The App
