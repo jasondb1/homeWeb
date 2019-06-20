@@ -4,13 +4,21 @@ const Gpio = require('onoff').Gpio;
 const sensor = require('node-dht-sensor').promises;
 const fs = require('fs');
 
+let currentStatus = { temperature: null, 
+	humidity: null, 
+	led: null,
+	ts: null};
+
 //TODO:change pins as needed
 const LEDPIN = 4;
 const TEMPPIN = 17;
-
+const SAMPLEINTERVAL = 10 //interval in seconds
 
 //LED light
 const led = new Gpio(LEDPIN, 'out');
+
+//TODO:do an initialization and update the currentStatus
+
 
 //temperature sensor
 
@@ -28,36 +36,55 @@ sensor.initialize({
 function readTemp() {
     sensor.read(22, TEMPPIN)
         .then(res => {
+		let datetime = new Date();
+		console.log(res);
                 console.log(`temp: ${res.temperature.toFixed(1)} deg C`
                     + `    humidity: ${res.humidity.toFixed(1)}%`
-                    + `    ts:` + new Date().getTime());
+                    + `    ts:` + datetime.toLocaleString());
+		
+		currentStatus.temperature = res.temperature.toFixed(1);
+		currentStatus.humidity = res.humidity.toFixed(2);
+
                 fs.appendFile(
                     "log.csv",
-                    new Date().getTime() +
+                    datetime.getTime() + 
+		    "," +
+		    datetime.toLocaleDateString() +
                     "," +
-                    temperature.toFixed(2) +
+		    datetime.toLocaleTimeString() +
+		    "," +
+                    res.temperature.toFixed(2) +
                     "," +
-                    humidity.toFixed(2) +
-                    "," +
-                    elapsed +
+                    res.humidity.toFixed(2) +
                     "\n", function (err) {
                     }
                 );
 
             },
-            err => {
-                console.error("Failed to read sensor data:", err);
-            }
-        );
+            //err => {
+            //    console.error("Failed to read sensor data:", err);
+            //}
+        )
+	.catch (err => {
+		console.error('failed to read sensor data:', err);
+	})
+	;
 }
 
-setInterval(readTemp(), 5000);
+setInterval(function () {readTemp();}, (SAMPLEINTERVAL * 1000));
 
+//status
+router.get('/status', (req, res) => {
+    	currentStatus.ts = new Date().getTime();
+	res.status(200).json(currentStatus);
+
+});
 
 //Turn led on
 router.get('/led_on', (req, res, next) => {
-    led.writeSync(1);
-    res.json({
+    led.writeSync(1);i
+    currentStatus.led = true;
+    res.status(200).json({
         led: 'on'
     });
 });
@@ -65,7 +92,8 @@ router.get('/led_on', (req, res, next) => {
 //turn led off
 router.get('/led_off', (req, res, next) => {
     led.writeSync(0);
-    res.json({
+    currentStatus.led = false;
+    res.status(200).json({
         led: 'off'
     });
 });
