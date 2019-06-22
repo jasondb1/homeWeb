@@ -3,22 +3,30 @@ const router = express.Router();
 const Gpio = require('onoff').Gpio;
 const sensor = require('node-dht-sensor').promises;
 const fs = require('fs');
+const i2c = require('i2c-bus');
+const i2c_bus = i2c.opensync(1);
+let arduino_i2cAddress = 0x08;
+let arduino_data_length = 0x08;
+let buffer_arduino = new Buffer(arduino_data_length);
 
 let currentStatus = { temperature: null, 
 	humidity: null, 
 	led: null,
-	ts: null};
+	ts: null,
+    arduino: null,
+
+};
 
 //TODO:change pins as needed
 const LEDPIN = 4;
 const TEMPPIN = 17;
-const SAMPLEINTERVAL = 10 //interval in seconds
+const SAMPLEINTERVAL = 10; //interval in seconds
 
 //LED light
 const led = new Gpio(LEDPIN, 'out');
 
 //TODO:do an initialization and update the currentStatus
-
+//TODO: bus scan i2c for connected devices
 
 //temperature sensor
 
@@ -32,6 +40,10 @@ sensor.initialize({
         }
     }
 });
+
+
+/////////////////////////////
+// readTemp
 
 function readTemp() {
     sensor.read(22, TEMPPIN)
@@ -71,7 +83,26 @@ function readTemp() {
 	;
 }
 
-setInterval(function () {readTemp();}, (SAMPLEINTERVAL * 1000));
+/////////////////////////////
+// readArduino
+
+function readArduino() {
+    i2c_bus.i2cReadSync(arduino_i2cAddress, arduino_data_length, buffer_arduino);
+    console.log(buffer_arduino);
+    string = buffer.arduino.toString();
+    console.log(string);
+}
+
+/////////////////////////////
+// readSensors
+
+function readSensors() {
+    readTemp();
+    readArduino();
+}
+
+
+setInterval(function () {readSensors();}, (SAMPLEINTERVAL * 1000));
 
 //status
 router.get('/status', (req, res) => {
