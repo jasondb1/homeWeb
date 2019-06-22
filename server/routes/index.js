@@ -4,10 +4,10 @@ const Gpio = require('onoff').Gpio;
 const sensor = require('node-dht-sensor').promises;
 const fs = require('fs');
 const i2c = require('i2c-bus');
-const i2c_bus = i2c.opensync(1);
+const i2c_bus = i2c.openSync(1);
 let arduino_i2cAddress = 0x08;
-let arduino_data_length = 0x08;
-let buffer_arduino = new Buffer(arduino_data_length);
+let arduino_data_length = 0x20;
+let buffer_arduino = Buffer.alloc(arduino_data_length, 0x00);
 
 let currentStatus = { temperature: null, 
 	humidity: null, 
@@ -89,8 +89,17 @@ function readTemp() {
 function readArduino() {
     i2c_bus.i2cReadSync(arduino_i2cAddress, arduino_data_length, buffer_arduino);
     console.log(buffer_arduino);
-    string = buffer.arduino.toString();
-    console.log(string);
+
+    string = buffer_arduino.toString();
+    let vals = string.split(/[\s,\0]+/ , 3);
+	currentStatus.light = vals[0];
+	currentStatus.temp1 = vals[1];
+	currentStatus.humidity1 = vals[2];
+	
+	console.log(string.trim());
+	console.log(string.split(/[\s,\0]+/ ,3));
+	
+
 }
 
 /////////////////////////////
