@@ -12,37 +12,38 @@ class Status extends Component {
 
     //TODO: do a setinterval to update every x seconds
     componentDidMount() {
-        api.getStatus().then(json => this.setState({ status: json }));
+       setInterval(this.updateStatus(), 5000);
+        //api.getStatus().then(json => this.setState({ status: json }));
     };
 
-    // handleOnChange(){
-    //
-    // };
+    updateStatus() {
+        api.getStatus().then(json => this.setState({ status: json }));
+    }
 
-   listItem(props) {
+   function ListItem(props) {
        return(
          <li>
-             props.value
+             {props.value}
          </li>
        );
     };
 
 
 
-   displayList() {
+   const DisplayList = () =>  {
 
-        //TODO: make this to read keys, maybe a for loop
-        const listItems = this.state.status.map( (value) => {
-                return (<listItem key={value} value={value} />);
+        const ListItems = this.state.status.map( (value) => {
+                return (<ListItem key={value} value={value} />);
             }
 
         );
 
-        console.log(listItems);
+        console.log(this.state);
+    this.state.status.map( (value) => { console.log(value); });
 
         return(
             <ul>
-                <listItems />
+                <ListItems />
             </ul>
         );
     };
@@ -52,7 +53,7 @@ class Status extends Component {
         return(
             <div>
                 <h2>Status</h2>
-                <displayList />
+                <DisplayList />
             </div>
         );
     }
