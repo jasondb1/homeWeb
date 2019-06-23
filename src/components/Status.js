@@ -1,59 +1,73 @@
 import React, { Component } from 'react';
 import api from "../api";
 
+const UPDATEINTERVAL = 5000;
+
+//const ListItem = (props) => {
+//	return(
+//		<li>
+//		{props.value}
+//		</li>
+//	);
+//}
+
+const ListItems = (props) => {
+	console.log(props.values);
+	//console.log(props.values.length());
+	//if (props.values.length > 0){
+	//	props.values.map( (value) => {
+	//		return (<ListItem key={value} value={value} />);
+	//	});
+	//} else {
+	//	console.log("return null");
+	//	return null;
+	//}
+
+	return (
+		<ul>
+		<li key="Temperature">Temperature: {props.values.temperature}</li>
+		<li key="Humidity">Humidity: {props.values.humidity}</li>
+		<li key="Light">Light: {props.values.light}</li>
+		</ul>
+	)
+
+
+}
+
+
 class Status extends Component {
    constructor(){
         super();
-
         this.state = {
             status: [],
         };
+	this.updateStatus = this.updateStatus.bind(this);
     }
 
     //TODO: do a setinterval to update every x seconds
     componentDidMount() {
-       setInterval(this.updateStatus(), 5000);
+       this.interval = setInterval(this.updateStatus, UPDATEINTERVAL);
         //api.getStatus().then(json => this.setState({ status: json }));
     };
 
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	}
+
     updateStatus() {
+	    //console.log("updating status");
         api.getStatus().then(json => this.setState({ status: json }));
     }
-
-   function ListItem(props) {
-       return(
-         <li>
-             {props.value}
-         </li>
-       );
-    };
-
-
-
-   const DisplayList = () =>  {
-
-        const ListItems = this.state.status.map( (value) => {
-                return (<ListItem key={value} value={value} />);
-            }
-
-        );
-
-        console.log(this.state);
-    this.state.status.map( (value) => { console.log(value); });
-
-        return(
-            <ul>
-                <ListItems />
-            </ul>
-        );
-    };
 
 
     render() {
         return(
             <div>
                 <h2>Status</h2>
-                <DisplayList />
+		
+			<ListItems values={this.state.status} />
+		
             </div>
         );
     }

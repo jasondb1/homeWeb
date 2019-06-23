@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import api from "../api";
+//import api from "../api";
 import OnOff from "./OnOffButton";
 
 class Controls extends Component {

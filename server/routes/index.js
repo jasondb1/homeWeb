@@ -122,7 +122,7 @@ router.get('/status', (req, res) => {
 
 //Turn led on
 router.get('/led_on', (req, res, next) => {
-    led.writeSync(1);i
+    led.writeSync(1);
     currentStatus.led = true;
     res.status(200).json({
         led: 'on'
