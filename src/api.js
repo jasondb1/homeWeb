@@ -13,6 +13,53 @@ const homewebService = {
         });
     },
 
+    getComponentState(component) {
+        return new Promise((resolve, reject) => {
+            fetch(`${baseAPI}/component_state/${component}`)
+                .then(response => response.json())
+                .then(json => resolve(json))
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
+
+    componentOn(component) {
+        return new Promise((resolve, reject) => {
+            fetch(`${baseAPI}/component_on/${component}`, {
+                method: 'POST',
+                body: JSON.stringify(1),
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(json => resolve(json))
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
+
+    componentOff(component) {
+        return new Promise((resolve, reject) => {
+            fetch(`${baseAPI}/component_off/${component}`, {
+                method: 'POST',
+                body: JSON.stringify(0),
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(json => resolve(json))
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
+
     ledOn() {
         return new Promise((resolve, reject) => {
             fetch(`${baseAPI}/led_on`)

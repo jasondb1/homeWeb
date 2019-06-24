@@ -10,31 +10,36 @@ class OnOff extends Component {
         this.state = {
             label: props.label,
             isOn: props.isOn,
+            component: props.component,
         };
 
         this.handleClick = this.handleClick.bind(this);
     }
 
+    componentDidMount() {
+        api.getComponentState(this.state.component).then(json => this.setState({isOn: json.isOn}));
+    }
+
     handleClick() {
         if (this.state.isOn) {
-            api.ledOff().then(json => this.setState({isOn: false}));
+            api.componentOff(this.state.component).then(json => this.setState({isOn: false}));
         } else {
-            api.ledOn().then(json => this.setState({isOn: true}));
+            api.componentOn(this.state.component).then(json => this.setState({isOn: true}));
         }
     };
 
     btnClasses() {
-	let classes = "btn";
-	    classes += this.state.isOn === true ? ' btn-success' : ' btn-danger';
+        let classes = "btn";
+        classes += this.state.isOn === true ? ' btn-success' : ' btn-danger';
         return classes;
     }
 
     render() {
         return (
             <div className='control'>
-		<label>
-		{this.state.label}
-		</label>
+                <label>
+                    {this.state.label}
+                </label>
                 <button
                     onClick={this.handleClick}
                     className={this.btnClasses()}
