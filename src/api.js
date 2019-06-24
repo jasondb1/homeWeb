@@ -15,7 +15,7 @@ const homewebService = {
 
     getComponentState(component) {
         return new Promise((resolve, reject) => {
-            fetch(`${baseAPI}/component_state/${component}`)
+            fetch(`${baseAPI}/component/${component}`)
                 .then(response => response.json())
                 .then(json => resolve(json))
                 .catch(err => {
@@ -28,14 +28,14 @@ const homewebService = {
         return new Promise((resolve, reject) => {
             fetch(`${baseAPI}/component_on/${component}`, {
                 method: 'POST',
-                body: JSON.stringify(1),
+                body: JSON.stringify({}),
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 }
             })
-                .then(response => response.json())
-                .then(json => resolve(json))
+                //.then(response => response.json())
+                .then(result => resolve(result))
                 .catch(err => {
                     reject(err);
                 });
@@ -46,14 +46,14 @@ const homewebService = {
         return new Promise((resolve, reject) => {
             fetch(`${baseAPI}/component_off/${component}`, {
                 method: 'POST',
-                body: JSON.stringify(0),
+                body: JSON.stringify({}),
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 }
             })
-                .then(response => response.json())
-                .then(json => resolve(json))
+                //.then(response => response.json())
+                .then(result => resolve(result))
                 .catch(err => {
                     reject(err);
                 });

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import api from "../api";
 
-const UPDATEINTERVAL = 5000;
+const UPDATEINTERVAL = 10000;
 
 const ListItems = (props) => {
     console.log(props.values);

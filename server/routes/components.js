@@ -163,7 +163,11 @@ router.get('/status', (req, res) => {
 // returns the component state
 
 router.get('/component/:id', (req, res) => {
+	console.log('GET component');
+	console.log(req.params);
+
     let comp = req.params.id;
+	console.log({status: component[comp].status});
     res.json({status: component[comp].status});
 });
 
@@ -171,8 +175,12 @@ router.get('/component/:id', (req, res) => {
 // /component_on
 // returns the component state
 
-router.post('/component_on:id', (req, res) => {
+router.post('/component_on/:id', (req, res) => {
     let comp = req.params.id;
+	console.log('component_on:' +comp);
+   console.log(req.params);
+
+console.log(component[comp]);
     component[comp].pin.writeSync(1);
     component[comp].status = true;
     currentStatus[comp] = true;
