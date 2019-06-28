@@ -17,9 +17,11 @@ const ListItems = (props) => {
 
     return (
         <ul>
-            <li key="Temperature">Temperature: {props.values.temperature}</li>
-            <li key="Humidity">Humidity: {props.values.humidity}</li>
-            <li key="Light">Light: {props.values.light}</li>
+            <li key="temp_local">Temperature Local: {props.values.temp_local}</li>
+            <li key="humidity_local">Humidity Local: {props.values.humidity_local}</li>
+            <li key="temp_remote0">Temperature Remote: {props.values.temp_remote0}</li>
+            <li key="humidity_remote0">Humidity Remote: {props.values.humidity_remote0}</li>
+            <li key="presistor_remote0">Light Remote: {props.values.presistor_remote0}</li>
         </ul>
     )
 };

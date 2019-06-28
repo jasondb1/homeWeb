@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const sqlite3 = require('sqlite3').verbose();
+
 const Gpio = require('onoff').Gpio;
 const dht_sensor = require('node-dht-sensor').promises;
 const fs = require('fs');
@@ -21,16 +23,7 @@ const SAMPLEINTERVAL = 10; //interval in seconds to sample temperature and humid
 
 //components
 let component = {};
-let currentStatus = {
-    temperature: null,
-    humidity: null,
-    led: null,
-    ts: null,
-    arduino: null,
-    relay1: null,
-    relay2: null,
-
-};
+let currentStatus = {};
 
 let LED = new Gpio(LEDPIN, 'out');
 let RELAY1 = new Gpio(RELAY1PIN, 'out');
@@ -50,17 +43,61 @@ function initialize() {
             pin: LED,
             name: 'LED',
             status: LED.readSync(),
+	    value: null
+
         },
         relay1: {
             pin: RELAY1,
             name: 'Relay 1',
             status: RELAY1.readSync(),
+		value: null,
+		low_on: true,
         },
         relay2: {
             pin: RELAY2,
             name: 'Relay 2',
             status: RELAY2.readSync(),
+		value: null,
+		low_on: true,
         },
+	temp_local: {
+		pin: null,
+		name: 'DHT22 - temperature',
+		status: null,
+		value: null,
+
+	},
+	humidity_local: {
+		pin: null,
+		name: 'DHT22 - humidity',
+		status: null,
+		value: null,
+
+	},
+	presistor_remote0: {
+		pin: i2c,
+		slave_addr: 0x08,
+		name: 'photo resistor',
+		status: null,
+		value: null
+	},
+	temp_remote0: {
+		pin: i2c,
+		slave_addr: 0x08,
+		name: 'remote_temp1',
+		status: null,
+		value: null,
+
+	},
+	humidity_remote0: {
+		pin: i2c,
+		slave_addr: 0x08,
+		name: 'DHT22 - humidity',
+		status: null,
+		value: null,
+
+	},
+
 
     };
 }
@@ -72,8 +109,8 @@ dht_sensor.setMaxRetries(10);
 dht_sensor.initialize({
     test: {
         fake: {
-            temperature: 21,
-            humidity: 60
+            temperature: 21.5,
+            humidity: 60.25
         }
     }
 });
@@ -91,23 +128,8 @@ function readTemp() {
                     + `    humidity: ${res.humidity.toFixed(1)}%`
                     + `    ts:` + datetime.toLocaleString());
 
-                currentStatus.temperature = res.temperature.toFixed(1);
-                currentStatus.humidity = res.humidity.toFixed(2);
-
-                fs.appendFile(
-                    "log.csv",
-                    datetime.getTime() +
-                    "," +
-                    datetime.toLocaleDateString() +
-                    "," +
-                    datetime.toLocaleTimeString() +
-                    "," +
-                    res.temperature.toFixed(2) +
-                    "," +
-                    res.humidity.toFixed(2) +
-                    "\n", function (err) {
-                    }
-                );
+		component.temp_local.value = res.temperature.toFixed(2);
+		component.humidity_local.value = res.humidity.toFixed(2);
 
             },
             //err => {
@@ -126,9 +148,11 @@ function readArduino() {
     i2c_bus.i2cReadSync(arduino_i2cAddress, arduino_data_length, buffer_arduino);
     string = buffer_arduino.toString();
     let vals = string.split(/[\s,\0]+/, 3);
-    currentStatus.light = vals[0];
-    currentStatus.temp1 = vals[1];
-    currentStatus.humidity1 = vals[2];
+
+	component.presistor_remote0.value = vals[0];
+	component.temp_remote0.value = vals[1];
+	component.humidity_remote0.value = vals[2];
+
     console.log(string.split(/[\s,\0]+/, 3));
 
 }
@@ -139,6 +163,53 @@ function readArduino() {
 function readAllSensors() {
     readTemp();
     readArduino();
+
+	//console.log(component);
+                let datetime = new Date();
+	fs.appendFile(
+                    "log.csv",
+                    datetime.getTime() +
+                    "," +
+                    datetime.toLocaleDateString() +
+                    "," +
+                    datetime.toLocaleTimeString() +
+                    "," +
+                    component.temp_local.value +
+                    "," +
+                    component.humidity_local.value +
+                    "\n", function (err) {
+                    }
+                );
+
+//open database
+let log_sensors = ['temp_local', 'humidity_local', 'temp_remote0', 'humidity_remote0', 'presistor_remote0', 'led', 'relay1', 'relay2']; 
+	
+let db = new sqlite3.Database('./db/homeWeb.db', (err) => {
+	if (err) {
+		console.error("[components.js] " + err.message);
+	} else {
+		//console.log('Connected to the homeWeb database.');
+	}
+});
+
+for (key of log_sensors){
+	db.run("INSERT INTO sensor_data(timestamp, description, sensor, value) VALUES( ?, ?, ?, ?)", [ datetime.getTime(), component[key].name, key, component[key].value ],  
+	(err) => {
+		if (err) {
+		console.error(err);
+		}
+	}
+	);
+}
+
+db.close((err) => {
+	if (err) {
+		return console.error(err.message);
+	} else {
+		//console.log('Close the db connection');
+	}
+});
+
 }
 
 
@@ -152,7 +223,15 @@ setInterval(function () {
 
 //status
 router.get('/status', (req, res) => {
+    let currentStatus = {};	
     currentStatus.ts = new Date().getTime();
+
+	let keys = ['temp_local', 'humidity_local', 'temp_remote0', 'humidity_remote0', 'presistor_remote0', 'led', 'relay1', 'relay2'];
+
+	for (key of keys){
+		currentStatus[key] = component[key].value;
+	}
+	
     res.status(200).json(currentStatus);
 
 });
@@ -163,12 +242,12 @@ router.get('/status', (req, res) => {
 // returns the component state
 
 router.get('/component/:id', (req, res) => {
-	console.log('GET component');
+	//console.log('GET component');
 	console.log(req.params);
 
     let comp = req.params.id;
-	console.log({status: component[comp].status});
-    res.json({status: component[comp].status});
+	console.log({status: component[comp].status, value: component[comp].value});
+    res.json({status: component[comp].status, value: component[comp].value});
 });
 
 /////////////////////////////
@@ -177,14 +256,20 @@ router.get('/component/:id', (req, res) => {
 
 router.post('/component_on/:id', (req, res) => {
     let comp = req.params.id;
-	console.log('component_on:' +comp);
-   console.log(req.params);
+   //console.log('component_on:' + comp);
+   //console.log(req.params);
 
-console.log(component[comp]);
-    component[comp].pin.writeSync(1);
+	if(component[comp].low_on){
+    		component[comp].pin.writeSync(0);
+	} else {
+	console.log("here 1");	
+	component[comp].pin.writeSync(1);
+	}
     component[comp].status = true;
-    currentStatus[comp] = true;
+    component[comp].value = true;
     res.json({status: true});
+
+	//console.log("component:on");
 
 });
 
@@ -195,12 +280,18 @@ console.log(component[comp]);
 router.post('/component_off/:id', (req, res) => {
 
     let comp = req.params.id;
-    component[comp].pin.writeSync(0);
+
+	if (component[comp].low_on){
+		component[comp].pin.writeSync(1);
+	} else {
+		component[comp].pin.writeSync(0);
+	}
+
     component[comp].status = false;
+    component[comp].value = false;
     currentStatus[comp] = false;
     res.json({status: true});
 
 });
-
 
 module.exports = router;

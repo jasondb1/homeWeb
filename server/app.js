@@ -4,7 +4,9 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const index = require('./routes/components');
+const components = require('./routes/components');
+const users = require('./routes/users');
+const logging = require('./routes/log');
 
 const app = express();
 
@@ -20,7 +22,9 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use('/api', index);
+app.use('/api/users', users);
+app.use('/api/log', logging);
+app.use('/api', components);
 app.get('*', (req, res) => {
     res.sendFile('build/index.html', {root: root});
 });
