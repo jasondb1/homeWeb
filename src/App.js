@@ -1,9 +1,9 @@
 import React, {Component} from "react";
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import "./App.css";
-
-//import Heroes from "./components/Heroes";
-import Controls from "./components/Controls";
-import Status from "./components/Status";
+import { LoginPage } from './LoginPage/LoginPage';
+import { HomePage } from './HomePage/HomePage';
+import { PrivateRoute } from './components/PrivateRoute';
 
 class App extends Component {
 
@@ -12,14 +12,17 @@ class App extends Component {
         this.state = {};
     }
 
-
     render() {
         return (
             <div>
                 <h1>HomeWeb</h1>
                 <div className="header-bar"/>
-                <Controls/>
-                <Status/>
+                <Router>
+                    <div>
+                        <PrivateRoute exact path="/" component={HomePage} />
+                        <Route path="/login" component={LoginPage} />
+                    </div>
+                </Router>
             </div>
         );
     }

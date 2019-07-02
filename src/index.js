@@ -5,5 +5,11 @@ import "./index.css";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 
-ReactDOM.render(<App/>, document.getElementById("root"));
+import { configureFakeBackend} from "./helpers/fake-backend";
+configureFakeBackend();
+
+ReactDOM.render(
+    <App/>,
+    document.getElementById("root")
+);
 registerServiceWorker();
