@@ -1,4 +1,3 @@
-//import config from 'config';
 import { authHeader } from '../helpers/auth-header';
 
 export const userService = {
@@ -7,10 +6,9 @@ export const userService = {
     getAll
 };
 
-
 //TODO: maybe move config to a seperate file
 const config={
-    apiUrl: 'http://localhost:3001',
+    apiUrl: 'http://localhost:3001/api',
 };
 
 function login(username, password) {

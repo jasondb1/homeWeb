@@ -43,60 +43,60 @@ function initialize() {
             pin: LED,
             name: 'LED',
             status: LED.readSync(),
-	    value: null
+            value: null
 
         },
         relay1: {
             pin: RELAY1,
             name: 'Relay 1',
             status: RELAY1.readSync(),
-		value: null,
-		low_on: true,
+            value: null,
+            low_on: true,
         },
         relay2: {
             pin: RELAY2,
             name: 'Relay 2',
             status: RELAY2.readSync(),
-		value: null,
-		low_on: true,
+            value: null,
+            low_on: true,
         },
-	temp_local: {
-		pin: null,
-		name: 'DHT22 - temperature',
-		status: null,
-		value: null,
+        temp_local: {
+            pin: null,
+            name: 'DHT22 - temperature',
+            status: null,
+            value: null,
 
-	},
-	humidity_local: {
-		pin: null,
-		name: 'DHT22 - humidity',
-		status: null,
-		value: null,
+        },
+        humidity_local: {
+            pin: null,
+            name: 'DHT22 - humidity',
+            status: null,
+            value: null,
 
-	},
-	presistor_remote0: {
-		pin: i2c,
-		slave_addr: 0x08,
-		name: 'photo resistor',
-		status: null,
-		value: null
-	},
-	temp_remote0: {
-		pin: i2c,
-		slave_addr: 0x08,
-		name: 'remote_temp1',
-		status: null,
-		value: null,
+        },
+        presistor_remote0: {
+            pin: i2c,
+            slave_addr: 0x08,
+            name: 'photo resistor',
+            status: null,
+            value: null
+        },
+        temp_remote0: {
+            pin: i2c,
+            slave_addr: 0x08,
+            name: 'remote_temp1',
+            status: null,
+            value: null,
 
-	},
-	humidity_remote0: {
-		pin: i2c,
-		slave_addr: 0x08,
-		name: 'DHT22 - humidity',
-		status: null,
-		value: null,
+        },
+        humidity_remote0: {
+            pin: i2c,
+            slave_addr: 0x08,
+            name: 'DHT22 - humidity',
+            status: null,
+            value: null,
 
-	},
+        },
 
 
     };
@@ -128,8 +128,8 @@ function readTemp() {
                     + `    humidity: ${res.humidity.toFixed(1)}%`
                     + `    ts:` + datetime.toLocaleString());
 
-		component.temp_local.value = res.temperature.toFixed(2);
-		component.humidity_local.value = res.humidity.toFixed(2);
+                component.temp_local.value = res.temperature.toFixed(2);
+                component.humidity_local.value = res.humidity.toFixed(2);
 
             },
             //err => {
@@ -149,9 +149,9 @@ function readArduino() {
     string = buffer_arduino.toString();
     let vals = string.split(/[\s,\0]+/, 3);
 
-	component.presistor_remote0.value = vals[0];
-	component.temp_remote0.value = vals[1];
-	component.humidity_remote0.value = vals[2];
+    component.presistor_remote0.value = vals[0];
+    component.temp_remote0.value = vals[1];
+    component.humidity_remote0.value = vals[2];
 
     console.log(string.split(/[\s,\0]+/, 3));
 
@@ -164,51 +164,51 @@ function readAllSensors() {
     readTemp();
     readArduino();
 
-	//console.log(component);
-                let datetime = new Date();
-	fs.appendFile(
-                    "log.csv",
-                    datetime.getTime() +
-                    "," +
-                    datetime.toLocaleDateString() +
-                    "," +
-                    datetime.toLocaleTimeString() +
-                    "," +
-                    component.temp_local.value +
-                    "," +
-                    component.humidity_local.value +
-                    "\n", function (err) {
-                    }
-                );
+    //console.log(component);
+    let datetime = new Date();
+    fs.appendFile(
+        "log.csv",
+        datetime.getTime() +
+        "," +
+        datetime.toLocaleDateString() +
+        "," +
+        datetime.toLocaleTimeString() +
+        "," +
+        component.temp_local.value +
+        "," +
+        component.humidity_local.value +
+        "\n", function (err) {
+        }
+    );
 
 //open database
-let log_sensors = ['temp_local', 'humidity_local', 'temp_remote0', 'humidity_remote0', 'presistor_remote0', 'led', 'relay1', 'relay2']; 
-	
-let db = new sqlite3.Database('./db/homeWeb.db', (err) => {
-	if (err) {
-		console.error("[components.js] " + err.message);
-	} else {
-		//console.log('Connected to the homeWeb database.');
-	}
-});
+    let log_sensors = ['temp_local', 'humidity_local', 'temp_remote0', 'humidity_remote0', 'presistor_remote0', 'led', 'relay1', 'relay2'];
 
-for (key of log_sensors){
-	db.run("INSERT INTO sensor_data(timestamp, description, sensor, value) VALUES( ?, ?, ?, ?)", [ datetime.getTime(), component[key].name, key, component[key].value ],  
-	(err) => {
-		if (err) {
-		console.error(err);
-		}
-	}
-	);
-}
+    let db = new sqlite3.Database('./db/homeWeb.db', (err) => {
+        if (err) {
+            console.error("[components.js] " + err.message);
+        } else {
+            //console.log('Connected to the homeWeb database.');
+        }
+    });
 
-db.close((err) => {
-	if (err) {
-		return console.error(err.message);
-	} else {
-		//console.log('Close the db connection');
-	}
-});
+    for (key of log_sensors) {
+        db.run("INSERT INTO sensor_data(timestamp, description, sensor, value) VALUES( ?, ?, ?, ?)", [datetime.getTime(), component[key].name, key, component[key].value],
+            (err) => {
+                if (err) {
+                    console.error(err);
+                }
+            }
+        );
+    }
+
+    db.close((err) => {
+        if (err) {
+            return console.error(err.message);
+        } else {
+            //console.log('Close the db connection');
+        }
+    });
 
 }
 
@@ -223,15 +223,15 @@ setInterval(function () {
 
 //status
 router.get('/status', (req, res) => {
-    let currentStatus = {};	
+    let currentStatus = {};
     currentStatus.ts = new Date().getTime();
 
-	let keys = ['temp_local', 'humidity_local', 'temp_remote0', 'humidity_remote0', 'presistor_remote0', 'led', 'relay1', 'relay2'];
+    let keys = ['temp_local', 'humidity_local', 'temp_remote0', 'humidity_remote0', 'presistor_remote0', 'led', 'relay1', 'relay2'];
 
-	for (key of keys){
-		currentStatus[key] = component[key].value;
-	}
-	
+    for (key of keys) {
+        currentStatus[key] = component[key].value;
+    }
+
     res.status(200).json(currentStatus);
 
 });
@@ -242,11 +242,11 @@ router.get('/status', (req, res) => {
 // returns the component state
 
 router.get('/component/:id', (req, res) => {
-	//console.log('GET component');
-	console.log(req.params);
+    //console.log('GET component');
+    console.log(req.params);
 
     let comp = req.params.id;
-	console.log({status: component[comp].status, value: component[comp].value});
+    console.log({status: component[comp].status, value: component[comp].value});
     res.json({status: component[comp].status, value: component[comp].value});
 });
 
@@ -256,20 +256,20 @@ router.get('/component/:id', (req, res) => {
 
 router.post('/component_on/:id', (req, res) => {
     let comp = req.params.id;
-   //console.log('component_on:' + comp);
-   //console.log(req.params);
+    //console.log('component_on:' + comp);
+    //console.log(req.params);
 
-	if(component[comp].low_on){
-    		component[comp].pin.writeSync(0);
-	} else {
-	console.log("here 1");	
-	component[comp].pin.writeSync(1);
-	}
+    if (component[comp].low_on) {
+        component[comp].pin.writeSync(0);
+    } else {
+        console.log("here 1");
+        component[comp].pin.writeSync(1);
+    }
     component[comp].status = true;
     component[comp].value = true;
     res.json({status: true});
 
-	//console.log("component:on");
+    //console.log("component:on");
 
 });
 
@@ -281,11 +281,11 @@ router.post('/component_off/:id', (req, res) => {
 
     let comp = req.params.id;
 
-	if (component[comp].low_on){
-		component[comp].pin.writeSync(1);
-	} else {
-		component[comp].pin.writeSync(0);
-	}
+    if (component[comp].low_on) {
+        component[comp].pin.writeSync(1);
+    } else {
+        component[comp].pin.writeSync(0);
+    }
 
     component[comp].status = false;
     component[comp].value = false;
