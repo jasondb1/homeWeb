@@ -1,82 +1,72 @@
 const express = require('express');
 const router = express.Router();
-const sqlite3 = require('sqlite3').verbose();
+//const sqlite3 = require('sqlite3').verbose();
 const userService = require('userService');
 
-//open database
-const db = new sqlite3.Database('./db/homeweb.db', (err) => {
-    if (err) {
-        console.error(err.message);
-    }
-    //console.log('Connected to the homeWeb database.');
-});
+// //open database
+// const db = new sqlite3.Database('./db/homeweb.db', (err) => {
+//     if (err) {
+//         console.error(err.message);
+//     }
+//     //console.log('Connected to the homeWeb database.');
+// });
+//
+//
+// db.serialize(function () {
+//     db.run("CREATE TABLE if not exists user_info (username VARCHAR NOT NULL, password VARCHAR, email VARCHAR);");
+//
+//
+// });
+//
+// db.close();
+//
+//
+// /////////////////////////////
+// // createUsersTable
+//
+// const createUsersTable = () => {
+//     const sqlQuery = `
+//         CREATE TABLE IF NOT EXISTS users (
+//         id integer PRIMARY KEY,
+//         name text,
+//         email text UNIQUE,
+//         password text)`;
+//
+//     return db.run(sqlQuery);
+// };
 
-
-db.serialize(function () {
-    db.run("CREATE TABLE if not exists user_info (username VARCHAR NOT NULL, password VARCHAR, email VARCHAR);");
-
-
-});
-
-db.close();
-
-
-/////////////////////////////
-// createUsersTable
-
-const createUsersTable = () => {
-    const sqlQuery = `
-        CREATE TABLE IF NOT EXISTS users (
-        id integer PRIMARY KEY,
-        name text,
-        email text UNIQUE,
-        password text)`;
-
-    return db.run(sqlQuery);
-};
-
-/////////////////////////////
-// findUserByEmail
-
-const findUserByEmail = (email, cb) => {
-    return db.get(`SELECT * FROM users WHERE email = ?`, [email], (err, row) => {
-        cb(err, row)
-    });
-};
-
-/////////////////////////////
-// findUser
-
-const findUser = (username, cb) => {
-    return db.get(`SELECT * FROM users WHERE username = ?`, [username], (err, row) => {
-        cb(err, row)
-    });
-};
-
-/////////////////////////////
-// createUser
-
-const createUser = (user, cb) => {
-    return db.run('INSERT INTO users (name, email, password) VALUES (?,?,?)', user, (err) => {
-        cb(err)
-    });
-};
+// /////////////////////////////
+// // findUserByEmail
+//
+// const findUserByEmail = (email, cb) => {
+//     return db.get(`SELECT * FROM users WHERE email = ?`, [email], (err, row) => {
+//         cb(err, row)
+//     });
+// };
+//
+// /////////////////////////////
+// // findUser
+//
+// const findUser = (username, cb) => {
+//     return db.get(`SELECT * FROM users WHERE username = ?`, [username], (err, row) => {
+//         cb(err, row)
+//     });
+// };
+//
+// /////////////////////////////
+// // createUser
+//
+// const createUser = (user, cb) => {
+//     return db.run('INSERT INTO users (name, email, password) VALUES (?,?,?)', user, (err) => {
+//         cb(err)
+//     });
+// };
 
 
 /////////////////////////////
 // get user
 
 router.get('/', (req, res) => {
-
-    // check for fake auth token in header and return users if valid, this security
-    // is implemented server side in a real application
-
-    // if (opts.headers && opts.headers.Authorization === `Basic ${window.btoa('test:test')}`) {
-    // 	resolve({ ok: true, text: () => Promise.resolve(JSON.stringify(users)) });
-    // } else {
-    // 	// return 401 not authorised if token is null or invalid
-    // 	resolve({ status: 401, text: () => Promise.resolve() });
-    // }
 
     userService.getAll()
         .then(users => res.json(users))
@@ -112,22 +102,6 @@ router.post('/register', (req, res, next) => {
         .then(() => res.json({}))
         .catch(err => next(err));
 });
-
-/////////////////////////////
-// login user
-
-// router.post('/login', (req, res) => {
-// 	res.status(200).send({ access_token:  '' });
-// });
-
-/////////////////////////////
-// /status
-// returns the status
-
-// router.get('/status', (req, res) => {
-//     res.json('isLoggedIn');
-//
-// });
 
 router.get('/current', (req, res, next) => {
     userService.getById(req.user.sub)

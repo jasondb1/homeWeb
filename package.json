@@ -14,6 +14,8 @@
     "eslint-config-airbnb": "^15.1.0",
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
+    "formik": "^1.5.7",
+    "history": "^4.9.0",
     "i2c-bus": "^4.0.10",
     "jade": "^1.11.0",
     "mongodb": "^2.2.31",
@@ -24,7 +26,9 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^5.0.1",
-    "sqlite3": "^4.0.9"
+    "rxjs": "^6.5.2",
+    "sqlite3": "^4.0.9",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "onoff": "^4.1.2",

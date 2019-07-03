@@ -8,6 +8,7 @@ import { authenticationService} from "./services/authenticationService";
 
 import { PrivateRoute } from './components/PrivateRoute';
 import { LoginPage } from './LoginPage/LoginPage';
+import { RegisterPage } from './LoginPage/RegisterPage';
 import { HomePage } from './HomePage/HomePage';
 
 
@@ -42,6 +43,7 @@ class App extends Component {
                         <nav className="navbar navbar-expand navbar-dark bg-dark">
                             <div className="navbar-nav">
                                 <Link to="/" className="nav-item nav-link">Home</Link>
+                                <Link to="/register" className="nav-item nav-link">Admin</Link>
                                 <a onClick={this.logout} className="nav-item nav-link">Logout</a>
                             </div>
                         </nav>
@@ -51,6 +53,7 @@ class App extends Component {
                                 <div className="row">
                                     <div className="col-md-6 offset-md-3">
                                         <PrivateRoute exact path="/" component={HomePage} />
+                                        <Route path="/register" component={RegisterPage} />
                                         <Route path="/login" component={LoginPage} />
                                     </div>
                                 </div>

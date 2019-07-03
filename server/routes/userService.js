@@ -1,5 +1,5 @@
 // users hardcoded for simplicity, store in a db for production applications
-const users = [{ id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' }];
+// const users = [{ id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' }];
 //user = {id: 1, username: ----, password: ----, email: ------}
 
 const config = require('../config.json');
@@ -12,7 +12,6 @@ const User = db.User;
 // const db = require('_helpers/db');
 // const User = db.User;
 
-
 module.exports = {
     authenticate,
     getAll,
@@ -23,8 +22,9 @@ module.exports = {
 };
 
 async function authenticate({ username, password}) {
-    const user = users.find(u => u.username === username && u.password === password);
+    //const user = users.find(u => u.username === username && u.password === password);
 
+    const user = await User.findOne({ username });
     if (user && bcrypt.compareSync(password, user.hash)) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
@@ -36,10 +36,7 @@ async function authenticate({ username, password}) {
 }
 
 async function getAll() {
-    return users.map(u => {
-        const { password, ...userWithoutPassword } = u;
-        return userWithoutPassword;
-    });
+    return await User.find().select('-hash');
 }
 
 async function getById(id) {
