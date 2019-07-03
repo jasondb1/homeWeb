@@ -5,8 +5,8 @@ import "./index.css";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 
-import { configureFakeBackend} from "./helpers/fake-backend";
-configureFakeBackend();
+//import { configureFakeBackend} from "./helpers/fake-backend";
+//configureFakeBackend();
 
 ReactDOM.render(
     <App/>,

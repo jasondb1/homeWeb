@@ -3,7 +3,7 @@ import React from 'react';
 //import * as Yup from 'yup';
 
 import { authenticationService } from "../services/authenticationService";
-import { userService} from "../services/userService";
+//import { userService} from "../services/userService";
 
 class LoginPage extends React.Component {
     constructor(props) {

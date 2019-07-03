@@ -56,7 +56,7 @@ class RegisterPage extends React.Component {
     }
 
     render() {
-        const { registering } = true;
+        //const { registering } = true;
         const { user, submitted } = this.state;
         return (
             <div className="col-md-6 col-md-offset-3">

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 //const sqlite3 = require('sqlite3').verbose();
-const userService = require('userService');
+const userService = require('./userService');
 
 // //open database
 // const db = new sqlite3.Database('./db/homeweb.db', (err) => {
@@ -79,7 +79,8 @@ router.get('/', (req, res) => {
 // register user
 
 router.post('/authenticate', (req, res, next) => {
-    userService.authenticate(req.body)
+    console.log('authenticate');
+	userService.authenticate(req.body)
         .then(user => user ? res.json(user) : res.status(400).json({message: 'Username or password is incorrect'}))
         .catch(err => next(err));
 
@@ -98,7 +99,8 @@ router.post('/authenticate', (req, res, next) => {
 // register user
 
 router.post('/register', (req, res, next) => {
-    userService.create(req.body)
+    console.log ('register');
+	userService.create(req.body)
         .then(() => res.json({}))
         .catch(err => next(err));
 });

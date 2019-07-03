@@ -3,7 +3,8 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const basicAuth = require('./routes/basicAuth');
+const cors = require ('cors');
+//const basicAuth = require('./routes/basicAuth');
 const errorHandler = require('./errorHandler');
 const jwt = require('./helpers/jwt');
 
@@ -20,13 +21,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'build')));
-
-app.use(basicAuth);
+app.use(cors());
+//app.use(basicAuth);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.all("/api/*", function(req, res, next) {
+	console.log("here");
+	  res.header("Access-Control-Allow-Origin", "*");
+	  res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
+	  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
+	  return next();
+});
 
 //authentication
 app.use(jwt());

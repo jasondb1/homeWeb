@@ -3,7 +3,7 @@
 //user = {id: 1, username: ----, password: ----, email: ------}
 
 const config = require('../config.json');
-const jwt = require('jswebtoken');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../helpers/db');
 const User = db.User;
@@ -23,6 +23,8 @@ module.exports = {
 
 async function authenticate({ username, password}) {
     //const user = users.find(u => u.username === username && u.password === password);
+console.log(username);
+console.log(password);
 
     const user = await User.findOne({ username });
     if (user && bcrypt.compareSync(password, user.hash)) {
