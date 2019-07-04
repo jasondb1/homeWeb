@@ -44,7 +44,7 @@ class App extends Component {
                             <div className="navbar-nav">
                                 <Link to="/" className="nav-item nav-link">Home</Link>
                                 <Link to="/register" className="nav-item nav-link">Admin</Link>
-                                <a onClick={this.logout} className="nav-item nav-link">Logout</a>
+                                <a href="#fake" onClick={this.logout} className="nav-item nav-link">Logout</a>
                             </div>
                         </nav>
                         }

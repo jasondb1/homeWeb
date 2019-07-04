@@ -1,0 +1,53 @@
+{
+  "name": "express-react-starter",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "bcrypt-nodejs": "0.0.3",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.3.1",
+    "bulma": "^0.5.0",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.5",
+    "debug": "^3.0.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "formik": "^1.5.7",
+    "history": "^4.9.0",
+    "i2c-bus": "^4.0.10",
+    "jade": "^1.11.0",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.13.18",
+    "morgan": "^1.9.1",
+    "node-dht-sensor": "^0.3.0",
+    "passport-local": "^1.0.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^5.0.1",
+    "rxjs": "^6.5.2",
+    "sqlite3": "^4.0.9",
+    "yup": "^0.27.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.6",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "html-webpack-plugin": "^3.2.0",
+    "onoff": "^4.1.2",
+    "react-scripts": "1.0.10",
+    "webpack": "^4.35.2",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build && mv build server",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:3001"
+}
