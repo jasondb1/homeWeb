@@ -28,13 +28,13 @@ app.use(cors());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.all("/api/*", function(req, res, next) {
-	console.log("here");
-	  res.header("Access-Control-Allow-Origin", "*");
-	  res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
-	  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
-	  return next();
-});
+// app.all("/api/*", function(req, res, next) {
+// 	console.log("here");
+// 	  res.header("Access-Control-Allow-Origin", "*");
+// 	  res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
+// 	  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
+// 	  return next();
+// });
 
 //authentication
 app.use(jwt());

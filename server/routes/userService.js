@@ -23,7 +23,8 @@ module.exports = {
 
 async function authenticate({ username, password}) {
     //const user = users.find(u => u.username === username && u.password === password);
-console.log(username);
+    console.log('authenticate');
+    console.log(username);
 console.log(password);
 
     const user = await User.findOne({ username });

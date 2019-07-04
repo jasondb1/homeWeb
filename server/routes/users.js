@@ -79,7 +79,7 @@ router.get('/', (req, res) => {
 // register user
 
 router.post('/authenticate', (req, res, next) => {
-    console.log('authenticate');
+    console.log('authenticate route');
 	userService.authenticate(req.body)
         .then(user => user ? res.json(user) : res.status(400).json({message: 'Username or password is incorrect'}))
         .catch(err => next(err));
