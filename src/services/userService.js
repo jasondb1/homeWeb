@@ -14,7 +14,7 @@ export const userService = {
 
 //TODO: maybe move config to a seperate file
 const config={
-    apiUrl: 'http://localhost:3001/api',
+    apiUrl: 'http://192.168.1.108:3001/api',
 };
 
 // function login(username, password) {
@@ -42,6 +42,7 @@ const config={
 function getAll() {
     const requestOptions = {
         method: 'GET',
+	mode: 'no-cors',
         headers: authHeader()
     };
     return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
@@ -60,7 +61,8 @@ function register(user) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
+        mode: 'no-cors',
+	body: JSON.stringify(user)
     };
 
     return fetch(`${config.apiUrl}/users/register`, requestOptions).then(handleResponse);

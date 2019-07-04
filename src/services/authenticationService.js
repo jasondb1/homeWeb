@@ -7,6 +7,8 @@ const config={
     apiUrl: 'http://localhost:3001/api',
 };
 
+const URL = 'http://192.168.1.108:3001/api';
+
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
 
 export const authenticationService = {
@@ -25,7 +27,8 @@ console.log('login');
         body: JSON.stringify({ username, password })
     };
 
-    return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
+	console.log(`${URL}/users/authenticate`);
+    return fetch(`${URL}/users/authenticate`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes

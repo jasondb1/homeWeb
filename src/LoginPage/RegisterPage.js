@@ -28,7 +28,7 @@ class RegisterPage extends React.Component {
     }
 
     componentDidMount() {
-        userService.getAll().then(users => this.setState({ users }));
+        //userService.getAll().then(users => this.setState({ users }));
     }
 
     handleChange(event) {
